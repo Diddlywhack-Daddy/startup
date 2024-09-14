@@ -1,6 +1,8 @@
-Test for pulling and pushing
-Change from my development environment!
+# startup-example
 
-Change from github
+An example startup app, used to practice git pulls, pushes, commits,
+and merges.
 
-Now creating a merge conflict (from gitbash)
+Change from github and my development environment.
+
+
