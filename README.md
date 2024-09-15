@@ -36,4 +36,5 @@ Stores users, assignments, and grades in a database. Registers and logs in users
 
 ## Rough Sketch
 
-*Insert your rough sketch or a description of it here.*
+![Example Image](website_sketch.jpg)
+
