@@ -32,8 +32,9 @@ Backend service with endpoints for:
 Stores users, assignments, and grades in a database. Registers and logs in users. Securely stores credentials and academic information.
 
 ### WebSocket
-(Optional) Allows sharing of course/assignment completion with other users.
+Allows optional sharing of course/assignment completion with other users.
 
 ## Rough Sketch
 
-*Insert your rough sketch or a description of it here.*
+![Example Image](website_sketch.jpg)
+
