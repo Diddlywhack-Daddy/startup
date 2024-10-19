@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+</head>
+<body>
+    <header>
+        <h1>Account Settings</h1>
+        <button onclick="window.location.href='signout.html'">Sign Out</button>
+    </header>
+
+    <section id="user-info">
+        <h2>Update User Information</h2>
+        <form action="update-info.html" method="post">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+            
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+            
+            <input type="submit" value="Update Information">
+        </form>
+    </section>
+
+    <section id="change-password">
+        <h2>Change Password</h2>
+        <form action="change-password.html" method="post">
+            <label for="current-password">Current Password:</label><br>
+            <input type="password" id="current-password" name="current-password" required><br><br>
+            
+            <label for="new-password">New Password:</label><br>
+            <input type="password" id="new-password" name="new-password" required><br><br>
+            
+            <label for="confirm-password">Confirm New Password:</label><br>
+            <input type="password" id="confirm-password" name="confirm-password" required><br><br>
+
+            <input type="submit" value="Change Password">
+        </form>
+    </section>
+
+    <section id="notification-settings">
+        <h2>Notification Settings</h2>
+        <form action="update-notifications.html" method="post">
+            <label for="email-notifications">Email Notifications:</label>
+            <input type="checkbox" id="email-notifications" name="email-notifications"><br>
+            
+            <input type="button" value="Delete Account">
+        </form>
+    </section>
+</body>
+</html>
