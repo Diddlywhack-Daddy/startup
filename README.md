@@ -38,3 +38,6 @@ Allows optional sharing of course/assignment completion with other users.
 
 ![Example Image](website_sketch.jpg)
 
+### Deployment of initial HTML files
+Created the initial html files for each page of the site, including some functional links between the pages. Used the code in deployFiles.sh to deploy it to the site with the following command : ./deployFiles.sh -k ../Diddlywhack_Doodad.pem -h jlarson.click -s startup
+
