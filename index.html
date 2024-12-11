@@ -4,34 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Scheduler Startup</title>
+    <style>
+        #github-source {
+            background-color: #f4f4f4;
+            border: 2px solid #ddd;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        #github-source a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        #github-source a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Scheduler Startup</h1>
-        <p><a href="home.html">TempHome</a></p> <!-- Changed "Temp_Home" to "Home" for clarity -->
-    </header>
+<header>
+    <h1>Welcome to Scheduler Startup</h1>
+    <p><a href="home.html">Bypass Signin</a></p>
+</header>
 
-    <section id="about">
-        <h2>About</h2>
-        <p>This website is a startup project designed to help you manage your school tasks efficiently.</p>
-      <p>We are completely open source, and all our code can be found <a href="https://github.com/Diddlywhack-Daddy/startup">here</a>.</p> <!-- Placeholder for GitHub link -->
-        <p>Join us to get started!</p>
-    </section>
+<section id="about">
+    <h2>About</h2>
+    <p>This website is a startup project designed to help you manage your school tasks efficiently. <p>We are completely open source! Check out our code on
+    <a href="https://github.com/Diddlywhack-Daddy/startup" target="_blank">GitHub</a>.</p></p>
+    <p>Join us to get started!</p>
+</section>
 
-    <section id="create-account">
-        <h2>Create an Account</h2>
-        <p><a href="accountCreation.html">Click here to create an account</a></p>
-    </section>
 
-    <section id="login">
-        <h2>Login</h2>
-        <form action="login.html" method="post">
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username" required><br><br>
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Login">
-        </form>
-    </section>
+
+<section id="create-account">
+    <h2>Create an Account</h2>
+    <p><a href="accountCreation.html">Click here to create an account</a></p>
+</section>
+
+<section id="login">
+    <h2>Login</h2>
+    <form action="login.html" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+</section>
+
 </body>
 </html>

@@ -39,5 +39,26 @@ Allows optional sharing of course/assignment completion with other users.
 ![Example Image](website_sketch.jpg)
 
 ### Deployment of initial HTML files
-Created the initial html files for each page of the site, including some functional links between the pages. Used the code in deployFiles.sh to deploy it to the site with the following command : ./deployFiles.sh -k ../Diddlywhack_Doodad.pem -h jlarson.click -s startup
+Created the initial html files for each page of the site, including:
+
+-index.html
+-about.html
+-accountCreation.html
+-accountSettings.html
+-courseSettings.html
+-home.html
+-schedule.html
+-signout.html
+
+Added functional links between the pages, including a temporary bypass login link on index.html that enables natural navigation while accounts are not implemented. Used the code in deployFiles.sh to deploy it to the site with the following command :
+ ./deployFiles.sh -k ../Diddlywhack_Doodad.pem -h jlarson.click -s startup
+
+### HTML Deliverable
+- [ ] HTML pages- Eight HTML pages that represent account creation, login/logout, settings, and the homework schedule
+- [ ] Links- functional links between the pages
+- [ ] Text- Text explaining all the buttons, and descriptions of what goes where
+- [ ] Images- 
+- [ ] DB/Login-placeholder for a login on the main page
+- [ ] WebSocket- not included
+
 
