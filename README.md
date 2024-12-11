@@ -54,11 +54,11 @@ Added functional links between the pages, including a temporary bypass login lin
  ./deployFiles.sh -k ../Diddlywhack_Doodad.pem -h jlarson.click -s startup
 
 ### HTML Deliverable
-- [ ] HTML pages- Eight HTML pages that represent account creation, login/logout, settings, and the homework schedule
-- [ ] Links- functional links between the pages
-- [ ] Text- Text explaining all the buttons, and descriptions of what goes where
-- [ ] Images- 
-- [ ] DB/Login-placeholder for a login on the main page
+- [x] HTML pages- Eight HTML pages that represent account creation, login/logout, settings, and the homework schedule
+- [x] Links- functional links between the pages
+- [x] Text- Text explaining all the buttons, and descriptions of what goes where
+- [x] Images- Successfully placed a generic schedule image on the front page
+- [x] DB/Login-placeholder for a login on the main page
 - [ ] WebSocket- not included
 
 
