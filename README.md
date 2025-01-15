@@ -17,7 +17,7 @@ Key features include:
 ## Technology Use
 
 ### HTML/CSS
-Used to display the webpage to users.
+Used to display the webpage to users. HTML provides the base layout, and CSS makes it adaptable to various screen sizes.
 
 ### JavaScript/React
 Provides framework for buttons and user interaction.
