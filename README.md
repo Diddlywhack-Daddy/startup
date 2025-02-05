@@ -17,7 +17,7 @@ Key features include:
 ## Technology Use
 
 ### HTML/CSS
-Used to display the webpage to users.
+Used to display the webpage to users. HTML provides the base layout, and CSS makes it adaptable to various screen sizes.
 
 ### JavaScript/React
 Provides framework for buttons and user interaction.
@@ -59,6 +59,10 @@ Added functional links between the pages, including a temporary bypass login lin
 - [x] Text- Text explaining all the buttons, and descriptions of what goes where
 - [x] Images- Successfully placed a generic schedule image on the front page
 - [x] DB/Login-placeholder for a login on the main page
+<<<<<<< HEAD
 - [x] WebSocket- Included chat.html which is a placeholder for a live chat across accounts that will be powered by Websocket
+=======
+- [x] WebSocket- Will be part of the chat feature
+>>>>>>> 1ca2badba34bb933acfcd9a1f00af8c86ae772c6
 
 
