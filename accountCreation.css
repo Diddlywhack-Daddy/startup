@@ -1,0 +1,101 @@
+/* General Reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f3f4f6;
+    color: #333;
+}
+
+/* Header Styles */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1em 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+/* Navigation Styles */
+p a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin: 1em;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Section Styles */
+#account-creation {
+    max-width: 500px;
+    margin: 2em auto;
+    padding: 1.5em;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.7em;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: #388E3C;
+}
+
+/* Privacy Notice */
+#account-creation p {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 1em;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background-color: #333;
+    color: white;
+    font-size: 0.9em;
+}
+
+footer p {
+    margin: 0;
+}
