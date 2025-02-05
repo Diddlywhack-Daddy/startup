@@ -62,3 +62,7 @@ Added functional links between the pages, including a temporary bypass login lin
 - [x] WebSocket- Included chat.html which is a placeholder for a live chat across accounts that will be powered by Websocket
 
 
+### CSS Deliverable
+[x] CSS Pages- One CSS page per HTML page, giving proper styling
+[x] Adjusts to window size
+[x] Navigation Elements
