@@ -1,0 +1,115 @@
+/* General Reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f3f4f6;
+    color: #333;
+}
+
+/* Header Styles */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1em 0; /* Restored original padding */
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em; /* Restored original font size */
+}
+
+header p a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 0.5em;
+    display: inline-block;
+}
+
+header p a:hover {
+    text-decoration: underline;
+}
+
+header img {
+    max-width: 100px;
+    margin: 10px 0;
+}
+
+/* Section Styles */
+section {
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 1.5em;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+    color: #4CAF50;
+    margin-top: 0;
+}
+
+section#about p {
+    margin-bottom: 1em;
+}
+
+section#about a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+section#about a:hover {
+    text-decoration: underline;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.7em;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #388E3C;
+}
+
+/* Link Styles */
+p a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
