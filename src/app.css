@@ -87,3 +87,9 @@ form button {
 form button:hover {
     background-color: #45a049;
 }
+
+.nav-link.active {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  
