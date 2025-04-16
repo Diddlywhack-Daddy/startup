@@ -19,55 +19,45 @@ export default function App() {
       <div className="body bg-light text-dark min-vh-100 d-flex flex-column">
         <header className="bg-success text-white shadow">
           <div className="container py-3">
-            <h1 className="text-center mb-3">Student Scheduler</h1>
-            <nav className="navbar navbar-expand-lg navbar-dark justify-content-center">
-              <div className="container-fluid justify-content-center">
-                {/* Hamburger Toggle Button */}
-                <button
-                  className="navbar-toggler"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#mainNavbar"
-                  aria-controls="mainNavbar"
-                  aria-expanded="false"
-                  aria-label="Toggle navigation"
-                >
-                  <span className="navbar-toggler-icon"></span>
-                </button>
-                {/* Collapsible Menu */}
-                <div className="collapse navbar-collapse justify-content-center" id="mainNavbar">
-                  <ul className="navbar-nav flex-lg-row">
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/">Login</NavLink>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/home">Home</NavLink>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/accountCreation" style={{ whiteSpace: "nowrap" }}>
-                        Create Account
-                      </NavLink>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/accountSettings">Settings</NavLink>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/chat">Chat</NavLink>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/courseSettings">Courses</NavLink>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/about">About</NavLink>
-                    </li>
-                    <li className="nav-item mx-2">
-                      <NavLink className="nav-link" to="/signout" style={{ whiteSpace: "nowrap" }}>
-                        Sign Out
-                      </NavLink>
-                    </li>
-                  </ul>
-                </div>
+            <nav className="navbar navbar-expand-lg navbar-dark justify-content-between">
+              <div className="d-flex align-items-center">
+                <img
+                  src="/logo.png"
+                  alt="Logo"
+                  style={{ height: '40px', marginRight: '10px' }}
+                />
+                <span className="navbar-brand mb-0 h1">Student Scheduler</span>
               </div>
+              <ul className="navbar-nav flex-row flex-wrap justify-content-end">
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/">Login</NavLink>
+                </li>
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/home">Home</NavLink>
+                </li>
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/accountCreation" style={{ whiteSpace: "nowrap" }}>
+                    Create Account
+                  </NavLink>
+                </li>
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/accountSettings">Settings</NavLink>
+                </li>
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/chat">Chat</NavLink>
+                </li>
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/courseSettings">Courses</NavLink>
+                </li>
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/about">About</NavLink>
+                </li>
+                <li className="nav-item mx-2">
+                  <NavLink className="nav-link" to="/signout" style={{ whiteSpace: "nowrap" }}>
+                    Sign Out
+                  </NavLink>
+                </li>
+              </ul>
             </nav>
           </div>
         </header>

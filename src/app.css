@@ -1,95 +1,35 @@
-/* === Global Reset === */
-body {
+/* === Reset and Base Styling === */
+html, body {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    padding-top: 80px; /* leaves room for fixed navbar */
     font-family: Arial, sans-serif;
-    line-height: 1.6;
     background-color: #f9f9f9;
     color: #333;
-}
-
-/* === Header === */
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1em 0;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2.5em;
-}
-
-/* === Navigation Links === */
-a {
+  }
+  
+  /* === Global Link Styling === */
+  a {
     color: #4CAF50;
     text-decoration: none;
     font-weight: bold;
-}
-
-a:hover {
+  }
+  
+  a:hover {
     text-decoration: underline;
-}
-
-/* === Layout Containers === */
-main {
-    max-width: 800px;
-    margin: 2em auto;
-    padding: 1em;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* === Footer === */
-footer {
+  }
+  
+  /* === Footer Styling === */
+  footer {
     text-align: center;
     padding: 1em 0;
     background-color: #333;
     color: white;
     font-size: 0.9em;
-}
-
-footer p {
-    margin: 0;
-}
-
-/* === Forms (for login, creation, etc.) === */
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-form label {
-    font-weight: bold;
-    margin-top: 1em;
-}
-
-form input, form select {
-    padding: 0.5em;
-    margin-top: 0.5em;
-    margin-bottom: 1em;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-form button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 0.75em;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #45a049;
-}
-
-.nav-link.active {
-    font-weight: bold;
-    text-decoration: underline;
+    margin-top: 2rem;
   }
   
