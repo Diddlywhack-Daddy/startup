@@ -66,3 +66,8 @@ Added functional links between the pages, including a temporary bypass login lin
 [x] CSS Pages- One CSS page per HTML page, giving proper styling
 [x] Adjusts to window size
 [x] Navigation Elements
+
+### REACT Pt 1 Deliverable
+[x] Deployed Simon React
+[x] Converted HTML elements into React objects
+[x] Updated UI elements to be more consistent
