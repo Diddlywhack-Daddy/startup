@@ -3,15 +3,22 @@
   "version": "1.0.0",
   "description": "I will create a website for students that combines assignment tracking, time management, and grades received. This will enable students to create daily schedules, check off completed tasks, and keep track of their grades, all on the same website.",
   "main": "index.js",
-    "scripts": {
+  "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
-  }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.5",
+    "react": "^19.1.0",
+    "react-bootstrap": "^2.10.9",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.5.0"
   }
 }
