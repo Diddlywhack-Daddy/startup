@@ -1,9 +1,68 @@
-#assignments,
-#courses {
-  max-width: 700px;
-  margin: 2em auto;
-  padding: 1.5em;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* home.css */
+
+/* === Layout === */
+main {
+  padding-bottom: 3rem;
+}
+
+h1, h2 {
+  font-weight: bold;
+}
+
+/* === Table Styling === */
+table th, table td {
+  vertical-align: middle;
+}
+
+.table-success {
+  background-color: #d4edda !important;
+}
+
+/* === Assignment Status Colors === */
+.text-danger {
+  font-weight: bold;
+}
+
+/* === Form and Buttons === */
+form input,
+form select {
+  border-radius: 0.25rem;
+}
+
+button.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+button.btn-success:hover {
+  background-color: #157347;
+  border-color: #146c43;
+}
+
+button.btn-danger {
+  font-weight: bold;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* === Responsive Alignment === */
+@media (max-width: 768px) {
+  .row.g-3 > div {
+    margin-bottom: 1rem;
+  }
+
+  table {
+    font-size: 0.95rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
 }
