@@ -6,94 +6,142 @@ const app = express();
 
 const authCookieName = 'token';
 
-// The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
 let scores = [];
+let assignments = [];
+let courses = [];
+let courseAssignments = {}; // ✅ Added for assignment types per course
 
-// The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
-// JSON body parsing using built-in middleware
 app.use(express.json());
-
-// Use the cookie parser middleware for tracking authentication tokens
 app.use(cookieParser());
-
-// Serve up the front-end static content hosting
 app.use(express.static('public'));
 
-// Router for service endpoints
-var apiRouter = express.Router();
-app.use(`/api`, apiRouter);
+// ✅ Log incoming requests for easier debugging
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
-// CreateAuth a new user                   THIS IS THE CREATION OF AN ENDPOINT
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
+
+// ✅ Auth endpoints
 apiRouter.post('/auth/create', async (req, res) => {
   if (await findUser('email', req.body.email)) {
     res.status(409).send({ msg: 'Existing user' });
   } else {
     const user = await createUser(req.body.email, req.body.password);
-
     setAuthCookie(res, user.token);
     res.send({ email: user.email });
   }
 });
 
-// GetAuth login an existing user
 apiRouter.post('/auth/login', async (req, res) => {
   const user = await findUser('email', req.body.email);
-  if (user) {
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      user.token = uuid.v4();
-      setAuthCookie(res, user.token);
-      res.send({ email: user.email });
-      return;
-    }
+  if (user && await bcrypt.compare(req.body.password, user.password)) {
+    user.token = uuid.v4();
+    setAuthCookie(res, user.token);
+    res.send({ email: user.email });
+  } else {
+    res.status(401).send({ msg: 'Unauthorized' });
   }
-  res.status(401).send({ msg: 'Unauthorized' });
 });
 
-// DeleteAuth logout a user
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
-  if (user) {
-    delete user.token;
-  }
+  if (user) delete user.token;
   res.clearCookie(authCookieName);
   res.status(204).end();
 });
 
-// Middleware to verify that the user is authorized to call an endpoint
 const verifyAuth = async (req, res, next) => {
   const user = await findUser('token', req.cookies[authCookieName]);
-  if (user) {
-    next();
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
-  }
+  if (user) next();
+  else res.status(401).send({ msg: 'Unauthorized' });
 };
 
-// GetScores
-apiRouter.get('/scores', verifyAuth, (_req, res) => {
-  res.send(scores);
+// ✅ Assignments endpoints
+apiRouter.get('/assignments', verifyAuth, (_req, res) => {
+  res.send(assignments);
 });
 
-// SubmitScore
-apiRouter.post('/score', verifyAuth, (req, res) => {
-  scores = updateScores(req.body);
-  res.send(scores);
+apiRouter.post('/assignments', verifyAuth, (req, res) => {
+  const newAssignment = { ...req.body, id: Date.now(), checked: false };
+  assignments.push(newAssignment);
+  res.status(201).send(assignments);
 });
 
-// Default error handler
-app.use(function (err, req, res, next) {
+apiRouter.put('/assignments/:id', verifyAuth, (req, res) => {
+  const id = parseInt(req.params.id);
+  assignments = assignments.map((a) => (a.id === id ? { ...a, ...req.body } : a));
+  res.send(assignments);
+});
+
+apiRouter.delete('/assignments', verifyAuth, (req, res) => {
+  const idsToDelete = req.body.ids;
+  assignments = assignments.filter((a) => !idsToDelete.includes(a.id));
+  res.send(assignments);
+});
+
+// ✅ Courses endpoints
+apiRouter.get('/courses', verifyAuth, (_req, res) => {
+  res.send(courses);
+});
+
+apiRouter.post('/courses', verifyAuth, (req, res) => {
+  const { name } = req.body;
+  if (!name || courses.find(c => c.name === name)) {
+    return res.status(400).send({ msg: 'Invalid or duplicate course' });
+  }
+  const course = { name, grade: 'N/A' };
+  courses.push(course);
+  res.status(201).send(courses);
+});
+
+apiRouter.delete('/courses', verifyAuth, (req, res) => {
+  const namesToDelete = req.body.names;
+  courses = courses.filter(c => !namesToDelete.includes(c.name));
+  namesToDelete.forEach(name => delete courseAssignments[name]);
+  res.send(courses);
+});
+
+// ✅ Assignment metadata endpoints
+apiRouter.get('/assignments/meta', verifyAuth, (_req, res) => {
+  res.send(courseAssignments);
+});
+
+apiRouter.post('/assignments/meta', verifyAuth, (req, res) => {
+  const { course, type, weight } = req.body;
+  if (!course || !type || !weight) {
+    return res.status(400).send({ msg: 'Missing fields' });
+  }
+  courseAssignments[course] = courseAssignments[course] || [];
+  courseAssignments[course].push({ type, weight });
+  res.send(courseAssignments);
+});
+
+apiRouter.delete('/assignments/meta', verifyAuth, (req, res) => {
+  const { course, index } = req.body;
+  if (courseAssignments[course]) {
+    courseAssignments[course].splice(index, 1);
+    res.send(courseAssignments);
+  } else {
+    res.status(404).send({ msg: 'Course not found' });
+  }
+});
+
+// ✅ Error and fallback handlers
+app.use((err, req, res, next) => {
   res.status(500).send({ type: err.name, message: err.message });
 });
 
-// Return the application's default page if the path is unknown
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
-// updateScores considers a new score for inclusion in the high scores.
+// ✅ Helpers
 function updateScores(newScore) {
   let found = false;
   for (const [i, prevScore] of scores.entries()) {
@@ -103,38 +151,23 @@ function updateScores(newScore) {
       break;
     }
   }
-
-  if (!found) {
-    scores.push(newScore);
-  }
-
-  if (scores.length > 10) {
-    scores.length = 10;
-  }
-
+  if (!found) scores.push(newScore);
+  if (scores.length > 10) scores.length = 10;
   return scores;
 }
 
 async function createUser(email, password) {
   const passwordHash = await bcrypt.hash(password, 10);
-
-  const user = {
-    email: email,
-    password: passwordHash,
-    token: uuid.v4(),
-  };
+  const user = { email, password: passwordHash, token: uuid.v4() };
   users.push(user);
-
   return user;
 }
 
 async function findUser(field, value) {
   if (!value) return null;
-
   return users.find((u) => u[field] === value);
 }
 
-// setAuthCookie in the HTTP response
 function setAuthCookie(res, authToken) {
   res.cookie(authCookieName, authToken, {
     maxAge: 1000 * 60 * 60 * 24 * 365,

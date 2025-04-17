@@ -13,60 +13,83 @@ export function Home({ userName }) {
   });
 
   useEffect(() => {
-    const storedCourses = JSON.parse(localStorage.getItem('courses')) || [];
-    const storedAssignments = JSON.parse(localStorage.getItem('homeAssignments')) || [];
-    setCourses(storedCourses);
-    setAssignments(storedAssignments);
+    async function loadData() {
+      try {
+        const courseRes = await fetch('/api/courses');
+        if (!courseRes.ok) throw new Error(`Courses fetch failed (${courseRes.status})`);
+        const courseList = await courseRes.json();
+        setCourses(courseList);
+      } catch (err) {
+        console.error('Failed to load courses', err);
+      }
+  
+      try {
+        const assignRes = await fetch('/api/assignments');
+        if (!assignRes.ok) throw new Error(`Assignments fetch failed (${assignRes.status})`);
+        const assignmentList = await assignRes.json();
+        setAssignments(assignmentList);
+      } catch (err) {
+        console.error('Failed to load assignments', err);
+      }
+    }
+  
+    loadData();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('homeAssignments', JSON.stringify(assignments));
-  }, [assignments]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setNewAssignment(prev => ({
+    setNewAssignment((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
-  const handleAddAssignment = (e) => {
+  const handleAddAssignment = async (e) => {
     e.preventDefault();
     if (newAssignment.name && newAssignment.course && newAssignment.dueDate) {
-      const newEntry = {
-        id: Date.now(),
-        course: newAssignment.course,
-        name: newAssignment.name,
-        dueDate: newAssignment.dueDate,
-        score: newAssignment.score,
-        complete: newAssignment.complete,
-        checked: false,
-      };
+      const response = await fetch('/api/assignments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newAssignment),
+      });
 
-      setAssignments(prev => [...prev, newEntry]);
+      const updated = await response.json();
+      setAssignments(updated);
       setNewAssignment({ course: '', name: '', dueDate: '', score: '', complete: false });
     }
   };
 
-  const handleDeleteAssignments = () => {
-    const remaining = assignments.filter(a => !a.checked);
-    setAssignments(remaining);
+  const handleAssignmentUpdate = async (id, field, value) => {
+    const body = {
+      [field]: field === 'complete' ? value.target.checked : value,
+    };
+
+    const response = await fetch(`/api/assignments/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const updated = await response.json();
+    setAssignments(updated);
   };
 
-  const handleAssignmentUpdate = (id, field, value) => {
-    setAssignments(prev =>
-      prev.map(a =>
-        a.id === id ? { ...a, [field]: field === 'complete' ? value.target.checked : value } : a
-      )
-    );
+  const handleDeleteAssignments = async () => {
+    const idsToDelete = assignments.filter((a) => a.checked).map((a) => a.id);
+
+    const response = await fetch('/api/assignments', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: idsToDelete }),
+    });
+
+    const updated = await response.json();
+    setAssignments(updated);
   };
 
   const toggleChecked = (id) => {
-    setAssignments(prev =>
-      prev.map(a =>
-        a.id === id ? { ...a, checked: !a.checked } : a
-      )
+    setAssignments((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, checked: !a.checked } : a))
     );
   };
 

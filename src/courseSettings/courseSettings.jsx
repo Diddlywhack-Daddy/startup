@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './courseSettings.css';
 import { NavLink } from 'react-router-dom';
+import './courseSettings.css';
 
 export function CourseSettings({ userName }) {
   const [courses, setCourses] = useState([]);
@@ -11,24 +11,45 @@ export function CourseSettings({ userName }) {
   const [assignmentForm, setAssignmentForm] = useState({ course: '', type: '', weight: '' });
 
   useEffect(() => {
-    setCourses(JSON.parse(localStorage.getItem('courses')) || []);
-    setAssignments(JSON.parse(localStorage.getItem('assignments')) || {});
+    async function loadData() {
+      try {
+        const courseRes = await fetch('/api/courses');
+        if (!courseRes.ok) throw new Error();
+        const courseList = await courseRes.json();
+        setCourses(courseList);
+      } catch {
+        console.error('Failed to load courses');
+      }
+
+      try {
+        const metaRes = await fetch('/api/assignments/meta');
+        if (!metaRes.ok) throw new Error();
+        const meta = await metaRes.json();
+        setAssignments(meta);
+      } catch {
+        console.error('Failed to load assignment metadata');
+      }
+    }
+
+    loadData();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('courses', JSON.stringify(courses));
-  }, [courses]);
-
-  useEffect(() => {
-    localStorage.setItem('assignments', JSON.stringify(assignments));
-  }, [assignments]);
-
-  const handleAddCourse = (e) => {
+  const handleAddCourse = async (e) => {
     e.preventDefault();
-    if (newCourse.trim()) {
-      setCourses([...courses, { name: newCourse.trim(), grade: 'N/A' }]);
+    if (!newCourse.trim()) return;
+
+    const res = await fetch('/api/courses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newCourse.trim() }),
+    });
+
+    if (res.ok) {
+      const updated = await res.json();
+      setCourses(updated);
       setNewCourse('');
-      alert('Course added (placeholder for DB)');
+    } else {
+      alert('Could not add course (may be duplicate)');
     }
   };
 
@@ -38,15 +59,21 @@ export function CourseSettings({ userName }) {
     );
   };
 
-  const handleDeleteSelectedCourses = () => {
-    const updatedCourses = courses.filter((c) => !selectedCourses.includes(c.name));
-    const updatedAssignments = { ...assignments };
-    selectedCourses.forEach((name) => delete updatedAssignments[name]);
-    setCourses(updatedCourses);
-    setAssignments(updatedAssignments);
-    setSelectedCourses([]);
-    setShowDeletePopup(false);
-    alert('Courses deleted (placeholder for DB)');
+  const handleDeleteSelectedCourses = async () => {
+    const res = await fetch('/api/courses', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ names: selectedCourses }),
+    });
+
+    if (res.ok) {
+      const updated = await res.json();
+      setCourses(updated);
+      setSelectedCourses([]);
+      setShowDeletePopup(false);
+    } else {
+      alert('Error deleting courses');
+    }
   };
 
   const handleAssignmentInput = (e) => {
@@ -54,24 +81,39 @@ export function CourseSettings({ userName }) {
     setAssignmentForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddAssignment = (e) => {
+  const handleAddAssignment = async (e) => {
     e.preventDefault();
     const { course, type, weight } = assignmentForm;
     if (!course || !type || !weight) return;
-    const updated = {
-      ...assignments,
-      [course]: [...(assignments[course] || []), { type, weight: `${weight}%` }],
-    };
-    setAssignments(updated);
-    setAssignmentForm({ course: '', type: '', weight: '' });
-    alert('Assignment type added (placeholder for DB)');
+
+    const res = await fetch('/api/assignments/meta', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ course, type, weight: `${weight}%` }),
+    });
+
+    if (res.ok) {
+      const updated = await res.json();
+      setAssignments(updated);
+      setAssignmentForm({ course: '', type: '', weight: '' });
+    } else {
+      alert('Error adding assignment type');
+    }
   };
 
-  const handleDeleteAssignment = (course, index) => {
-    const updated = [...assignments[course]];
-    updated.splice(index, 1);
-    setAssignments({ ...assignments, [course]: updated });
-    alert('Assignment deleted (placeholder for DB)');
+  const handleDeleteAssignment = async (course, index) => {
+    const res = await fetch('/api/assignments/meta', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ course, index }),
+    });
+
+    if (res.ok) {
+      const updated = await res.json();
+      setAssignments(updated);
+    } else {
+      alert('Error deleting assignment type');
+    }
   };
 
   return (
