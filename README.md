@@ -63,20 +63,27 @@ Added functional links between the pages, including a temporary bypass login lin
 
 
 ### CSS Deliverable
-[x] CSS Pages- One CSS page per HTML page, giving proper styling
-[x] Adjusts to window size
-[x] Navigation Elements
+- [x] CSS Pages- One CSS page per HTML page, giving proper styling
+- [x] Adjusts to window size
+- [x] Navigation Elements
 
 ### REACT Pt 1 Deliverable
-[x] Deployed Simon React
-[x] Converted HTML elements into React objects
-[x] Updated UI elements to be more consistent
+- [x] Deployed Simon React
+- [x] Converted HTML elements into React objects
+- [x] Updated UI elements to be more consistent
 
 ### REACT pt 2 Deliverable
-[x] Added placeholders for DB calls
-[x] Added functional react components for all the buttons
-[x] Displays different pages based on authorization status
+- [x] Added placeholders for DB calls
+- [x] Added functional react components for all the buttons
+- [x] Displays different pages based on authorization status
 
 
 ### Service Deliverable
-[x] Added Service calls for signup and login
+- [x] Added Service endpoints for signup and login
+- [x] Added Service endpoints for home and courses
+
+
+### TODO:
+- [ ] Add realtime grade calculation
+- [ ] Use assignment types and weights properly
+- [ ] Add proper signout
