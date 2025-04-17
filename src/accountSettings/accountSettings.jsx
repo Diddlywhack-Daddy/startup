@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './accountSettings.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,29 @@ export function AccountSettings({ userName, setUserName }) {
 
   const [message, setMessage] = useState('');
 
+  // Load user info from backend on component mount
+  useEffect(() => {
+    async function loadUserInfo() {
+      try {
+        const res = await fetch('/api/account', {
+          credentials: 'include',  // This ensures that cookies are included in the request
+        });
+        if (!res.ok) throw new Error('Failed to load user info');
+        const data = await res.json();
+        setForm((prev) => ({
+          ...prev,
+          username: data.username,
+          email: data.email,
+          emailNotifications: data.emailNotifications,
+        }));
+      } catch (err) {
+        console.error('Failed to load user info', err);
+      }
+    }
+    loadUserInfo();
+  }, []);
+  
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -24,38 +47,85 @@ export function AccountSettings({ userName, setUserName }) {
     }));
   };
 
-  const handleInfoUpdate = (e) => {
+  const handleInfoUpdate = async (e) => {
     e.preventDefault();
 
-    // ✅ Update greeting and show alert
-    setUserName(form.username);
-    setMessage('User information updated!');
-    setTimeout(() => setMessage(''), 3000);
-
-    // ✅ Placeholder for DB update
-    console.log('Saving user info to DB (placeholder)', form);
-
-    // ✅ Refresh route to re-render Authenticated component
-    navigate('/accountSettings', { replace: true });
+    // Send user info update to backend
+    try {
+      const res = await fetch('/api/account/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          username: form.username,
+          email: form.email,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to update user information');
+      setUserName(form.username);
+      setMessage('User information updated!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (err) {
+      console.error('Failed to update user information', err);
+    }
   };
 
-  const handlePasswordUpdate = (e) => {
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     if (form.newPassword !== form.confirmPassword) {
       alert('New passwords do not match.');
       return;
     }
 
-    alert('Password updated (placeholder)');
+    try {
+      const res = await fetch('/api/account/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          currentPassword: form.currentPassword,
+          newPassword: form.newPassword,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to change password');
+      alert('Password updated successfully');
+    } catch (err) {
+      console.error('Failed to change password', err);
+    }
   };
 
-  const handleNotificationUpdate = (e) => {
+  const handleNotificationUpdate = async (e) => {
     e.preventDefault();
-    alert('Notification preferences updated (placeholder)');
+
+    try {
+      const res = await fetch('/api/account/prefs', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          emailNotifications: form.emailNotifications,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to update preferences');
+      alert('Notification preferences updated');
+    } catch (err) {
+      console.error('Failed to update preferences', err);
+    }
   };
 
-  const handleDeleteAccount = () => {
-    alert('Account deletion not implemented yet.');
+  const handleDeleteAccount = async () => {
+    try {
+      const res = await fetch('/api/account/delete', {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to delete account');
+      alert('Account deleted successfully');
+      // Redirect user to home page after account deletion
+      navigate('/home');
+    } catch (err) {
+      console.error('Failed to delete account', err);
+    }
   };
 
   return (

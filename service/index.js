@@ -20,8 +20,8 @@ app.use(express.static('public'));
 
 // ✅ Log incoming requests for easier debugging
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
+    console.log(`${req.method} ${req.url}`);
+    next();
 });
 
 const apiRouter = express.Router();
@@ -29,154 +29,223 @@ app.use('/api', apiRouter);
 
 // ✅ Auth endpoints
 apiRouter.post('/auth/create', async (req, res) => {
-  if (await findUser('email', req.body.email)) {
-    res.status(409).send({ msg: 'Existing user' });
-  } else {
-    const user = await createUser(req.body.email, req.body.password);
-    setAuthCookie(res, user.token);
-    res.send({ email: user.email });
-  }
+    if (await findUser('email', req.body.email)) {
+        res.status(409).send({ msg: 'Existing user' });
+    } else {
+        const user = await createUser(req.body.email, req.body.password);
+        setAuthCookie(res, user.token);
+        res.send({ email: user.email });
+    }
 });
 
 apiRouter.post('/auth/login', async (req, res) => {
-  const user = await findUser('email', req.body.email);
-  if (user && await bcrypt.compare(req.body.password, user.password)) {
-    user.token = uuid.v4();
-    setAuthCookie(res, user.token);
-    res.send({ email: user.email });
-  } else {
-    res.status(401).send({ msg: 'Unauthorized' });
-  }
+    const user = await findUser('email', req.body.email);
+    if (user && await bcrypt.compare(req.body.password, user.password)) {
+        user.token = uuid.v4();
+        setAuthCookie(res, user.token);
+        res.send({ email: user.email });
+    } else {
+        res.status(401).send({ msg: 'Unauthorized' });
+    }
 });
 
 apiRouter.delete('/auth/logout', async (req, res) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
-  if (user) delete user.token;
-  res.clearCookie(authCookieName);
-  res.status(204).end();
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) delete user.token;
+    res.clearCookie(authCookieName);
+    res.status(204).end();
 });
 
 const verifyAuth = async (req, res, next) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
-  if (user) next();
-  else res.status(401).send({ msg: 'Unauthorized' });
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) next();
+    else res.status(401).send({ msg: 'Unauthorized' });
 };
 
 // ✅ Assignments endpoints
 apiRouter.get('/assignments', verifyAuth, (_req, res) => {
-  res.send(assignments);
+    res.send(assignments);
 });
 
 apiRouter.post('/assignments', verifyAuth, (req, res) => {
-  const newAssignment = { ...req.body, id: Date.now(), checked: false };
-  assignments.push(newAssignment);
-  res.status(201).send(assignments);
+    const newAssignment = { ...req.body, id: Date.now(), checked: false };
+    assignments.push(newAssignment);
+    res.status(201).send(assignments);
 });
 
 apiRouter.put('/assignments/:id', verifyAuth, (req, res) => {
-  const id = parseInt(req.params.id);
-  assignments = assignments.map((a) => (a.id === id ? { ...a, ...req.body } : a));
-  res.send(assignments);
+    const id = parseInt(req.params.id);
+    assignments = assignments.map((a) => (a.id === id ? { ...a, ...req.body } : a));
+    res.send(assignments);
 });
 
 apiRouter.delete('/assignments', verifyAuth, (req, res) => {
-  const idsToDelete = req.body.ids;
-  assignments = assignments.filter((a) => !idsToDelete.includes(a.id));
-  res.send(assignments);
+    const idsToDelete = req.body.ids;
+    assignments = assignments.filter((a) => !idsToDelete.includes(a.id));
+    res.send(assignments);
 });
 
 // ✅ Courses endpoints
 apiRouter.get('/courses', verifyAuth, (_req, res) => {
-  res.send(courses);
+    res.send(courses);
 });
 
 apiRouter.post('/courses', verifyAuth, (req, res) => {
-  const { name } = req.body;
-  if (!name || courses.find(c => c.name === name)) {
-    return res.status(400).send({ msg: 'Invalid or duplicate course' });
-  }
-  const course = { name, grade: 'N/A' };
-  courses.push(course);
-  res.status(201).send(courses);
+    const { name } = req.body;
+    if (!name || courses.find(c => c.name === name)) {
+        return res.status(400).send({ msg: 'Invalid or duplicate course' });
+    }
+    const course = { name, grade: 'N/A' };
+    courses.push(course);
+    res.status(201).send(courses);
 });
 
 apiRouter.delete('/courses', verifyAuth, (req, res) => {
-  const namesToDelete = req.body.names;
-  courses = courses.filter(c => !namesToDelete.includes(c.name));
-  namesToDelete.forEach(name => delete courseAssignments[name]);
-  res.send(courses);
+    const namesToDelete = req.body.names;
+    courses = courses.filter(c => !namesToDelete.includes(c.name));
+    namesToDelete.forEach(name => delete courseAssignments[name]);
+    res.send(courses);
 });
 
 // ✅ Assignment metadata endpoints
 apiRouter.get('/assignments/meta', verifyAuth, (_req, res) => {
-  res.send(courseAssignments);
+    res.send(courseAssignments);
 });
 
 apiRouter.post('/assignments/meta', verifyAuth, (req, res) => {
-  const { course, type, weight } = req.body;
-  if (!course || !type || !weight) {
-    return res.status(400).send({ msg: 'Missing fields' });
-  }
-  courseAssignments[course] = courseAssignments[course] || [];
-  courseAssignments[course].push({ type, weight });
-  res.send(courseAssignments);
+    const { course, type, weight } = req.body;
+    if (!course || !type || !weight) {
+        return res.status(400).send({ msg: 'Missing fields' });
+    }
+    courseAssignments[course] = courseAssignments[course] || [];
+    courseAssignments[course].push({ type, weight });
+    res.send(courseAssignments);
 });
 
 apiRouter.delete('/assignments/meta', verifyAuth, (req, res) => {
-  const { course, index } = req.body;
-  if (courseAssignments[course]) {
-    courseAssignments[course].splice(index, 1);
-    res.send(courseAssignments);
-  } else {
-    res.status(404).send({ msg: 'Course not found' });
-  }
+    const { course, index } = req.body;
+    if (courseAssignments[course]) {
+        courseAssignments[course].splice(index, 1);
+        res.send(courseAssignments);
+    } else {
+        res.status(404).send({ msg: 'Course not found' });
+    }
 });
+
+// Get current account info
+apiRouter.get('/account', verifyAuth, async (req, res) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) {
+      res.send({ email: user.email, username: user.username || '', emailNotifications: !!user.emailNotifications });
+    } else {
+      res.status(404).send({ msg: 'User not found' });
+    }
+  });
+  
+
+// Update user info
+apiRouter.put('/account/update', verifyAuth, async (req, res) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) {
+        user.username = req.body.username;
+        user.email = req.body.email;
+        res.send({ msg: 'User info updated' });
+    } else {
+        res.status(404).send({ msg: 'User not found' });
+    }
+});
+
+// Change password
+apiRouter.put('/account/password', verifyAuth, async (req, res) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    const { currentPassword, newPassword } = req.body;
+
+    if (!user || !(await bcrypt.compare(currentPassword, user.password))) {
+        return res.status(401).send({ msg: 'Current password incorrect' });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    res.send({ msg: 'Password changed successfully' });
+});
+
+// Update preferences
+apiRouter.put('/account/prefs', verifyAuth, async (req, res) => {
+    const user = await findUser('token', req.cookies[authCookieName]);
+    if (user) {
+        user.emailNotifications = req.body.emailNotifications;
+        res.send({ msg: 'Preferences updated' });
+    } else {
+        res.status(404).send({ msg: 'User not found' });
+    }
+});
+
+// Delete account
+apiRouter.delete('/account/delete', verifyAuth, async (req, res) => {
+    const index = users.findIndex(u => u.token === req.cookies[authCookieName]);
+    if (index !== -1) {
+        users.splice(index, 1);
+        res.clearCookie(authCookieName);
+        res.status(204).end();
+    } else {
+        res.status(404).send({ msg: 'User not found' });
+    }
+});
+
 
 // ✅ Error and fallback handlers
 app.use((err, req, res, next) => {
-  res.status(500).send({ type: err.name, message: err.message });
+    res.status(500).send({ type: err.name, message: err.message });
 });
 
 app.use((_req, res) => {
-  res.sendFile('index.html', { root: 'public' });
+    res.sendFile('index.html', { root: 'public' });
 });
 
 // ✅ Helpers
 function updateScores(newScore) {
-  let found = false;
-  for (const [i, prevScore] of scores.entries()) {
-    if (newScore.score > prevScore.score) {
-      scores.splice(i, 0, newScore);
-      found = true;
-      break;
+    let found = false;
+    for (const [i, prevScore] of scores.entries()) {
+        if (newScore.score > prevScore.score) {
+            scores.splice(i, 0, newScore);
+            found = true;
+            break;
+        }
     }
-  }
-  if (!found) scores.push(newScore);
-  if (scores.length > 10) scores.length = 10;
-  return scores;
+    if (!found) scores.push(newScore);
+    if (scores.length > 10) scores.length = 10;
+    return scores;
 }
 
 async function createUser(email, password) {
-  const passwordHash = await bcrypt.hash(password, 10);
-  const user = { email, password: passwordHash, token: uuid.v4() };
-  users.push(user);
-  return user;
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const user = {
+        email,
+        password: passwordHash,
+        token: uuid.v4(),
+        username: '',  // Default empty username (or you can make this dynamic later)
+        emailNotifications: false,  // Default false for email notifications
+    };
+
+    users.push(user);
+    return user;
 }
 
+
 async function findUser(field, value) {
-  if (!value) return null;
-  return users.find((u) => u[field] === value);
+    if (!value) return null;
+    return users.find((u) => u[field] === value);
 }
 
 function setAuthCookie(res, authToken) {
-  res.cookie(authCookieName, authToken, {
-    maxAge: 1000 * 60 * 60 * 24 * 365,
-    secure: true,
-    httpOnly: true,
-    sameSite: 'strict',
-  });
+    res.cookie(authCookieName, authToken, {
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        secure: true,
+        httpOnly: true,
+        sameSite: 'strict',
+    });
 }
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+    console.log(`Listening on port ${port}`);
 });
