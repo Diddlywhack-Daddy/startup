@@ -71,3 +71,8 @@ Added functional links between the pages, including a temporary bypass login lin
 [x] Deployed Simon React
 [x] Converted HTML elements into React objects
 [x] Updated UI elements to be more consistent
+
+### REACT pt 2 Deliverable
+[x] Added placeholders for DB calls
+[x] Added functional react components for all the buttons
+[x] Displays different pages based on authorization status
