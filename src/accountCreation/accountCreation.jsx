@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MessageDialog } from '../login/messageDialog';
 import './accountCreation.css';
 
-export function AccountCreation() {
+export function AccountCreation({ setUserName, setIsAuthenticated }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -12,6 +13,8 @@ export function AccountCreation() {
     confirmPassword: '',
   });
 
+  const [displayError, setDisplayError] = useState(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -20,19 +23,36 @@ export function AccountCreation() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match.');
+      setDisplayError('Passwords do not match.');
       return;
     }
 
-    // ✅ Placeholder for DB save
-    console.log('Account created:', formData);
+    try {
+      const response = await fetch('/api/auth/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.username, // Using username as email (adjust if needed)
+          password: formData.password,
+        }),
+      });
 
-    alert('Account successfully created! Redirecting to login...');
-    navigate('/');
+      if (response.status === 200) {
+        localStorage.setItem('userName', formData.username);
+        setUserName(formData.username);
+        setIsAuthenticated(true);
+        navigate('/home');
+      } else {
+        const body = await response.json();
+        setDisplayError(body?.msg || 'Account creation failed.');
+      }
+    } catch (err) {
+      setDisplayError('Something went wrong. Please try again later.');
+    }
   };
 
   return (
@@ -102,6 +122,8 @@ export function AccountCreation() {
         </form>
 
         <p className="mt-3 text-muted">We will not share your personal information.</p>
+
+        <MessageDialog message={displayError} onHide={() => setDisplayError(null)} />
       </section>
 
       <footer className="mt-5 text-muted">

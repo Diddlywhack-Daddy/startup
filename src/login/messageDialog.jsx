@@ -1,3 +1,6 @@
+import React from 'react';
+
+
 export function MessageDialog({ message, onClose }) {
     return (
       <div className="modal">

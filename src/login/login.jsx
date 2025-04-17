@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import './login.css';
 import { useNavigate, NavLink } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import { MessageDialog } from './messageDialog';
+import './login.css';
 
 export function Login({ setUserName, setIsAuthenticated }) {
   const [form, setForm] = useState({ username: '', password: '' });
+  const [displayError, setDisplayError] = useState(null);
   const navigate = useNavigate();
 
   function handleChange(event) {
@@ -13,17 +16,41 @@ export function Login({ setUserName, setIsAuthenticated }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+    loginOrCreate('/api/auth/login');
+  }
 
-    // ✅ Accept any credentials for now
-    if (form.username && form.password) {
+  async function loginOrCreate(endpoint) {
+    console.log('Attempting login/create to:', endpoint);
+  
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.username, password: form.password }),
+    });
+  
+    console.log('Response status:', response.status);
+  
+    if (response?.status === 200) {
+      console.log('Login successful');
+      localStorage.setItem('userName', form.username);
       setUserName(form.username);
       setIsAuthenticated(true);
-      localStorage.setItem('userName', form.username); // optional: save it
-      navigate('/home');
+      navigate('/home'); // Make sure you have a route for /home
     } else {
-      alert('Please enter both username and password.');
+      let body = {};
+      try {
+        body = await response.json();
+      } catch {
+        console.warn('Empty or invalid JSON in error response');
+      }
+  
+      const message = body?.msg || `Unexpected error: ${response.status}`;
+      console.log('Login failed:', message);
+      setDisplayError(`⚠ Error: ${message}`);
     }
   }
+  
+  
 
   return (
     <main className="container-fluid login-page text-center py-4">
@@ -35,7 +62,7 @@ export function Login({ setUserName, setIsAuthenticated }) {
         <h2>About</h2>
         <p>This website is a startup project designed to help you manage your school tasks efficiently.</p>
         <p>
-          We are completely open source! Check out our code on{" "}
+          We are completely open source! Check out our code on{' '}
           <a
             href="https://github.com/Diddlywhack-Daddy/startup"
             target="_blank"
@@ -84,10 +111,12 @@ export function Login({ setUserName, setIsAuthenticated }) {
           </div>
 
           <div className="d-grid">
-            <button type="submit" className="btn btn-success">Sign In</button>
+            <Button type="submit" variant="success">Sign In</Button>
           </div>
         </form>
       </section>
+
+      <MessageDialog message={displayError} onHide={() => setDisplayError(null)} />
     </main>
   );
 }
