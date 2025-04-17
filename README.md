@@ -76,3 +76,7 @@ Added functional links between the pages, including a temporary bypass login lin
 [x] Added placeholders for DB calls
 [x] Added functional react components for all the buttons
 [x] Displays different pages based on authorization status
+
+
+### Service Deliverable
+[x] Added Service calls for signup and login
